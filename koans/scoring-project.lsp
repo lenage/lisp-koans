@@ -48,10 +48,26 @@
 ; More scoring examples are given in the tests below:
 ;
 ; Your goal is to write the score method.
+;
+(defun find-set (roll)
+  (assert (= (length roll) 5))
+  (loop for i from 1 to 5
+       when (>= (count i roll) 3)
+       do (return i)))
 
 (defun score (dice)
-  ; You need to write this method
-)
+  (let ((freq (make-hash-table)))
+    (loop for x in dice do (incf (gethash x freq 0)))
+    (loop for x being the hash-key of freq using (hash-value c)
+          sum (if (<= 3 c)
+                  (case x
+                    (1 (+ 1000 (* 100 (- c 3))))
+                    (5 (+  500 (*  50 (- c 3))))
+                    (t (* x 100)))
+                  (case x
+                    (1 (* c 100))
+                    (5 (* c  50))
+                    (t 0))))))
 
 (define-test test-score-of-an-empty-list-is-zero
     (assert-equal 0 (score nil)))

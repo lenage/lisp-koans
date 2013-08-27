@@ -18,7 +18,14 @@
 (define-condition triangle-error  (error) ())
 
 (defun triangle (a b c)
-  :write-me)
+  (let* ((max-value (max a b c))
+         (trianglep (< max-value  (- (+ a b c) max-value))))
+    (cond
+      ((and trianglep (= a b c)) :equilateral)
+      ((and trianglep (or (= a b) (= a c) (= b c))) :isosceles)
+      (trianglep :scalene)
+      (t (error 'triangle-error))
+      )))
 
 
 (define-test test-equilateral-triangles-have-equal-sides
